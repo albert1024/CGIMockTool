@@ -1,14 +1,14 @@
 //
-//  MMWKWebView.m
+//  MMSearchTextField.m
 //  CGIMockTool
 //
-//  Created by littleliang on 2018/6/18.
-//  Copyright © 2018年 littleliang. All rights reserved.
+//  Created by 梁力图 on 2018/7/3.
+//  Copyright © 2018 littleliang. All rights reserved.
 //
 
-#import "MMWKWebView.h"
+#import "MMSearchTextField.h"
 
-@implementation MMWKWebView
+@implementation MMSearchTextField
 
 - (BOOL)performKeyEquivalent:(NSEvent *)event {
     bool bHandled = NO;

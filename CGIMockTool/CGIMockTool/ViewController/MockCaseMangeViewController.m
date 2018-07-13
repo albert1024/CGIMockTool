@@ -14,6 +14,7 @@
 #import "JSONEditorWindowViewController.h"
 #import "JSONEditorViewController.h"
 #import "MMCgiMockScript.h"
+#import "MMSearchTextField.h"
 
 @interface MockCaseMangeViewController ()<NSTabViewDelegate, NSTableViewDataSource, NewMockCaseViewControllerDelegate>
 @property (weak) IBOutlet NSTableView *mockCaseTableView;
@@ -26,9 +27,11 @@
 
 @property(nonatomic, strong) NSString *selectedMockScriptPath;
 
-@property (weak) IBOutlet NSSearchField *searchTextField;
+@property (weak) IBOutlet MMSearchTextField *searchTextField;
 
 @property(nonatomic, strong) NSMutableArray<MMCgiMockCase *> *searchMockCaseArray;
+
+@property(nonatomic, strong) NSString *nowMockCaseId;
 
 @end
 
@@ -56,6 +59,8 @@
     self.errorLabel.stringValue = @"";
     
     self.searchMockCaseArray = [[NSMutableArray alloc] init];
+    
+    self.nowMockCaseId = [self getNowMockCaseId];
 }
 
 - (void)onDoubleClickMockCaseCell:(id)sender {
@@ -170,19 +175,31 @@
             return [NSString stringWithFormat:@"%@", mockcase.mockcaseName];
         }
         MMCgiMockCase *mockcase = [self.mockcaseDataArr objectAtIndex:row];
-        return [NSString stringWithFormat:@"%@", mockcase.mockcaseName];
+        NSString *str = [NSString stringWithFormat:@"%@", mockcase.mockcaseName];
+        if ([mockcase.mockcaseId isEqualToString:self.nowMockCaseId]) {
+            return [str stringByAppendingString:@"  ✔"];
+        }
+        return  str;
     } else {
         NSString *scriptPath = [self.selectedMockCase.cgiMockScripts objectAtIndex:row];
+        
+        BOOL value = [[self.selectedMockCase.cgiMockScriptsSelectDict objectForKey:scriptPath] boolValue];
+        if (value == YES) {
+            return [scriptPath stringByAppendingString:@"  ✔"];
+        }
         return scriptPath;
     }
 }
 
 - (void)tableView:(NSTableView *)tableView shouldSelectRow:(NSInteger)row {
     if (tableView == self.mockCaseTableView) {
+        [self.mockScriptsTableView deselectAll:nil];
         if (self.searchTextField.stringValue.length > 0) {
+            self.selectedMockScriptPath = nil;
             self.selectedMockCase = [self.searchMockCaseArray objectAtIndex:row];
             [self.mockScriptsTableView reloadData];
         } else {
+            self.selectedMockScriptPath = nil;
             self.selectedMockCase = [self.mockcaseDataArr objectAtIndex:row];
             [self.mockScriptsTableView reloadData];
         }
@@ -229,18 +246,20 @@
     panel.allowsMultipleSelection = YES;
     
     NSMutableArray *selectedArray = [[NSMutableArray alloc] init];
+    NSString *requireString = @"";
     if ([panel runModal] == NSModalResponseOK) {
         NSArray *urls = [panel URLs];
         for (NSURL *fileUrl in urls) {
             NSString *nsFilePath = [fileUrl absoluteString];
             NSLog(@"%@", nsFilePath);
             NSArray *components = [nsFilePath componentsSeparatedByString:@"/"];
-            NSString *requireString = @"";
             for (int i = 0; i < components.count; i++) {
                 NSString *component = [components objectAtIndex:i];
                 if ([component isEqualToString:@"CgiMockTestCase"]) {
                     for (int j = i + 1; j < components.count; j++) {
                         requireString = [requireString stringByAppendingPathComponent:[components objectAtIndex:j]];
+                        //requireString = [NSString stringWithCString:[requireString UTF8String] encoding:NSUTF8StringEncoding];
+                        requireString = [NSString stringWithString:[requireString stringByRemovingPercentEncoding]];
                     }
                     break;
                 }
@@ -260,7 +279,18 @@
     }
     [cgiMockScripts addObjectsFromArray:selectedArray];
     self.selectedMockCase.cgiMockScripts = cgiMockScripts;
+    
+    NSMutableDictionary *cgiMockScriptsSelectDict = nil;
+    if (self.selectedMockCase.cgiMockScriptsSelectDict == nil) {
+        cgiMockScriptsSelectDict = [[NSMutableDictionary alloc] init];
+    } else {
+        cgiMockScriptsSelectDict = [self.selectedMockCase.cgiMockScriptsSelectDict mutableCopy];
+    }
+    [cgiMockScriptsSelectDict setObject:@(YES) forKey:requireString];
+    self.selectedMockCase.cgiMockScriptsSelectDict = cgiMockScriptsSelectDict;
+    
     [MMMockToolUtil saveMockCase:self.selectedMockCase];
+    
     [self.mockScriptsTableView reloadData];
 }
 
@@ -283,10 +313,13 @@
         return;
     }
     NSArray *selectedMockCaseScripts = [self.selectedMockCase.cgiMockScripts copy];
-    NSString *outputCgiMockStageFile = [NSString stringWithFormat:@"//Mock case name : %@\n", self.selectedMockCase.mockcaseName];
+    NSDictionary *selectDict = [self.selectedMockCase.cgiMockScriptsSelectDict copy];
+    NSString *outputCgiMockStageFile = [NSString stringWithFormat:@"//Mock case name : %@ ID: %@\n", self.selectedMockCase.mockcaseName, self.selectedMockCase.mockcaseId];
     for (NSString *mockScript in selectedMockCaseScripts) {
-        NSString *tempStr = [NSString stringWithFormat:@"require(\"%@\")\n", mockScript];
-        outputCgiMockStageFile = [outputCgiMockStageFile stringByAppendingString:tempStr];
+        if ([[selectDict objectForKey:mockScript] boolValue] == YES) {
+            NSString *tempStr = [NSString stringWithFormat:@"require(\"%@\")\n", mockScript];
+            outputCgiMockStageFile = [outputCgiMockStageFile stringByAppendingString:tempStr];
+        }
     }
     NSString *filePath = [[MMMockToolUtil projectRootDir] stringByAppendingPathComponent:@"MMTest/CgiMock/CgiMockTestCase/cgimockstage.js"];
     NSError *error = nil;
@@ -295,7 +328,9 @@
         [MMMockToolUtil showAlert:self.view.window title:@"" message:error.description];
         return;
     }
-    [MMMockToolUtil showAlert:self.view.window title:@"" message:@"设置Mock Case成功"];
+    self.nowMockCaseId = self.selectedMockCase.mockcaseId;
+    [self.mockCaseTableView reloadData];
+    [MMMockToolUtil showAlert:self.view.window title:@"" message:@"更改用例成功"];
 }
 
 - (IBAction)onRemoveBtnClick:(id)sender {
@@ -310,5 +345,62 @@
     [self.mockCaseTableView reloadData];
     [self.mockScriptsTableView reloadData];
 }
+
+- (NSString *)getNowMockCaseId {
+    NSString *filePath = [[MMMockToolUtil projectRootDir] stringByAppendingPathComponent:@"MMTest/CgiMock/CgiMockTestCase/cgimockstage.js"];
+    NSString *content = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
+    NSArray *lines = [content componentsSeparatedByString:@"\n"];
+    if (lines.count > 0) {
+        NSString *line1 = lines[0];
+        NSArray *comps = [line1 componentsSeparatedByString:@" "];
+        NSString *mockcaseid = [comps lastObject];
+        return mockcaseid;
+    } else {
+        return nil;
+    }
+}
+
+- (IBAction)selectMockScripts:(id)sender {
+    //NSMutableArray * = nil;
+    
+    if (self.selectedMockCase == nil || self.selectedMockScriptPath == nil) {
+        [MMMockToolUtil showAlert:self.view.window title:@"" message:@"请选择一个脚本"];
+        return;
+    }
+    
+    NSMutableDictionary *cgiMockScriptsSelectDict = nil;
+    if (self.selectedMockCase.cgiMockScriptsSelectDict == nil) {
+        cgiMockScriptsSelectDict = [[NSMutableDictionary alloc] init];
+    } else {
+        cgiMockScriptsSelectDict = [self.selectedMockCase.cgiMockScriptsSelectDict mutableCopy];
+    }
+    [cgiMockScriptsSelectDict setObject:@(YES) forKey:self.selectedMockScriptPath];
+
+    self.selectedMockCase.cgiMockScriptsSelectDict = cgiMockScriptsSelectDict;
+    [MMMockToolUtil saveMockCase:self.selectedMockCase];
+    [self.mockScriptsTableView reloadData];
+}
+
+- (IBAction)unselectMockScripts:(id)sender {
+    
+    if (self.selectedMockCase == nil || self.selectedMockScriptPath == nil) {
+        [MMMockToolUtil showAlert:self.view.window title:@"" message:@"请选择一个脚本"];
+        return;
+    }
+    
+    NSMutableDictionary *cgiMockScriptsSelectDict = nil;
+    if (self.selectedMockCase.cgiMockScripts == nil) {
+        cgiMockScriptsSelectDict = [[NSMutableDictionary alloc] init];
+    } else {
+        cgiMockScriptsSelectDict = [self.selectedMockCase.cgiMockScriptsSelectDict mutableCopy];
+    }
+    [cgiMockScriptsSelectDict setObject:@(NO) forKey:self.selectedMockScriptPath];
+    
+    self.selectedMockCase.cgiMockScriptsSelectDict = cgiMockScriptsSelectDict;
+    [MMMockToolUtil saveMockCase:self.selectedMockCase];
+    [self.mockScriptsTableView reloadData];
+}
+
+
 
 @end

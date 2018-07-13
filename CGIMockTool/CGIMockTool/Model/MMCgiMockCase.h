@@ -15,6 +15,7 @@
 @property(nonatomic, strong) NSMutableArray *cgiMockScripts;
 @property(nonatomic, strong) NSString *mockcaseName;
 @property(nonatomic, strong) NSString *mockcaseId;
+@property(nonatomic, strong) NSMutableDictionary *cgiMockScriptsSelectDict;
 
 - (instancetype)initWithDictionary:(NSDictionary *)dict;
 - (instancetype)initWithMockCaseName:(NSString *)mockcaseName;

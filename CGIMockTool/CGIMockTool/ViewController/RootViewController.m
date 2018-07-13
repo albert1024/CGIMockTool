@@ -16,12 +16,13 @@
 #import "JSONEditorViewController.h"
 #import "MMCgiMockScript.h"
 #import "MockCaseMangeWindowController.h"
+#import "MMSearchTextField.h"
 
 @interface RootViewController()<NSTabViewDelegate, NSTableViewDataSource, NSSearchFieldDelegate>
 
 @property (weak) IBOutlet NSTableView *cgiNameTableView;
 @property(nonatomic, strong) NSArray *cgiModelArray;
-@property (weak) IBOutlet NSSearchField *searchField;
+@property (weak) IBOutlet MMSearchTextField *searchField;
 @property (weak) IBOutlet NSTextField *errorLabel;
 
 @property(nonatomic, strong) MMCgiModel *selectedCgiModel;
@@ -70,7 +71,6 @@
 
 - (void)refreshView {
     if ([MMMockToolUtil projectRootDir].length == 0) {
-        //[self.view removeAllSubviews];
         [self.view hideAllSubviews];
         return;
     }
@@ -141,7 +141,7 @@
 
 - (void)viewDidAppear {
     [super viewDidAppear];
-    [self checkAndSetRootDir];
+    //[self checkAndSetRootDir];
     [self refreshView];
 }
 

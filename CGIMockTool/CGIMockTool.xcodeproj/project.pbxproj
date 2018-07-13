@@ -100,6 +100,7 @@
 		4CF3FC0220E3894A00CE7E96 /* MockCaseMangeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CF3FC0120E3894A00CE7E96 /* MockCaseMangeViewController.m */; };
 		4CF3FC0520E3B20100CE7E96 /* NewMockCaseWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CF3FC0420E3B20000CE7E96 /* NewMockCaseWindowController.m */; };
 		4CF3FC0820E3B23200CE7E96 /* NewMockCaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CF3FC0720E3B23200CE7E96 /* NewMockCaseViewController.m */; };
+		743EAE8220EB50DC007351E7 /* MMSearchTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 743EAE8120EB50DC007351E7 /* MMSearchTextField.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -275,7 +276,6 @@
 		4C91D89A20D3A3590025A5B5 /* JSONEditorWindowViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JSONEditorWindowViewController.m; sourceTree = "<group>"; };
 		4C91D89C20D3A3CB0025A5B5 /* JSONEditorViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JSONEditorViewController.h; sourceTree = "<group>"; };
 		4C91D89D20D3A3CB0025A5B5 /* JSONEditorViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JSONEditorViewController.m; sourceTree = "<group>"; };
-		4C91DB0520D7B1E30025A5B5 /* jsoneditor */ = {isa = PBXFileReference; lastKnownFileType = folder; name = jsoneditor; path = ../../Wechat_Git/wechat/tools/CgiMockTool/jsoneditor; sourceTree = "<group>"; };
 		4C91DB0720D7BCB40025A5B5 /* MMWKWebView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMWKWebView.h; sourceTree = "<group>"; };
 		4C91DB0820D7BCB40025A5B5 /* MMWKWebView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMWKWebView.m; sourceTree = "<group>"; };
 		4CF3FBF020DCFF2E00CE7E96 /* MMCgiMockScript.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMCgiMockScript.h; sourceTree = "<group>"; };
@@ -290,6 +290,9 @@
 		4CF3FC0420E3B20000CE7E96 /* NewMockCaseWindowController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NewMockCaseWindowController.m; sourceTree = "<group>"; };
 		4CF3FC0620E3B23200CE7E96 /* NewMockCaseViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NewMockCaseViewController.h; sourceTree = "<group>"; };
 		4CF3FC0720E3B23200CE7E96 /* NewMockCaseViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NewMockCaseViewController.m; sourceTree = "<group>"; };
+		743EAE7E20EB241B007351E7 /* jsoneditor */ = {isa = PBXFileReference; lastKnownFileType = folder; name = jsoneditor; path = ../../../Wechat_Git/wechat_trunk/wechat/tools/CgiMockTool/jsoneditor; sourceTree = "<group>"; };
+		743EAE8020EB50DC007351E7 /* MMSearchTextField.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMSearchTextField.h; sourceTree = "<group>"; };
+		743EAE8120EB50DC007351E7 /* MMSearchTextField.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMSearchTextField.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -307,7 +310,7 @@
 		4C65B11820CBED4C006D216D = {
 			isa = PBXGroup;
 			children = (
-				4C91DB0520D7B1E30025A5B5 /* jsoneditor */,
+				743EAE7E20EB241B007351E7 /* jsoneditor */,
 				4C8B303220CF6E1D00B3201F /* google */,
 				4C65B12320CBED4D006D216D /* CGIMockTool */,
 				4C65B12220CBED4D006D216D /* Products */,
@@ -618,6 +621,8 @@
 				4C8F0DFC20D286B600AFB6FC /* MMTextView.m */,
 				4C91DB0720D7BCB40025A5B5 /* MMWKWebView.h */,
 				4C91DB0820D7BCB40025A5B5 /* MMWKWebView.m */,
+				743EAE8020EB50DC007351E7 /* MMSearchTextField.h */,
+				743EAE8120EB50DC007351E7 /* MMSearchTextField.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -745,6 +750,7 @@
 				4C8B30D920CF6E1D00B3201F /* coded_stream.cc in Sources */,
 				4CF3FBF220DCFF2E00CE7E96 /* MMCgiMockScript.m in Sources */,
 				4C8B30D520CF6E1D00B3201F /* objectivec-descriptor.pb.cc in Sources */,
+				743EAE8220EB50DC007351E7 /* MMSearchTextField.m in Sources */,
 				4C8B310B20CF6E1D00B3201F /* objectivec_generator.cc in Sources */,
 				4C91D89E20D3A3CB0025A5B5 /* JSONEditorViewController.m in Sources */,
 				4C8B310820CF6E1D00B3201F /* objectivec_field.cc in Sources */,
@@ -925,7 +931,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CONFIGURATION_BUILD_DIR = /Users/littleliang/Developer/Wechat_Git/wechat/tools/CgiMockTool;
+				CONFIGURATION_BUILD_DIR = /Users/lianglitu/Developer/Wechat_Git/wechat_trunk/wechat/tools/CgiMockTool;
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/**";
 				INFOPLIST_FILE = CGIMockTool/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -944,7 +950,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CONFIGURATION_BUILD_DIR = /Users/littleliang/Developer/Wechat_Git/wechat/tools/CgiMockTool;
+				CONFIGURATION_BUILD_DIR = /Users/lianglitu/Developer/Wechat_Git/wechat_trunk/wechat/tools/CgiMockTool;
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/**";
 				INFOPLIST_FILE = CGIMockTool/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (

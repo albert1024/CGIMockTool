@@ -39,10 +39,9 @@ static NSMutableDictionary * kMessageNameProtoFileMap = nil;
 
 + (NSString *)projectRootDir {
     //NSUserDefaults *
-    dispatch_once(&onceToken, ^{
-        userDefaults = [NSUserDefaults standardUserDefaults];
-    });
-    return [userDefaults objectForKey:kRootDirKey];
+    NSString *bundlePath = [[NSBundle mainBundle] bundlePath];
+    NSString *defaultRootPath = [[[bundlePath stringByDeletingLastPathComponent] stringByDeletingLastPathComponent] stringByDeletingLastPathComponent];
+    return defaultRootPath;
 }
 
 + (void)saveProjectRootDir:(NSString *)projectDir {
@@ -298,6 +297,10 @@ static NSMutableDictionary * kMessageNameProtoFileMap = nil;
     
     google::protobuf::compiler::objectivec::ObjectiveCGenerator objc_generator;
     cli.RegisterGenerator("--mockcase_out", &objc_generator, "Generate Mock Case Script File");
+    for (int i = 0; i < argc; i++) {
+        delete[] argv[i];
+    }
+    delete[] argv;
     
     int result = cli.Run(argc, argv);
     if (result != 0) {

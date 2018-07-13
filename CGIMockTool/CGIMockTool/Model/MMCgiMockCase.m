@@ -10,26 +10,13 @@
 
 @implementation MMCgiMockCase
 
-//- (void)encodeWithCoder:(NSCoder *)aCoder {
-//    [aCoder encodeObject:self.cgiMockScripts forKey:@"cgiMockScripts"];
-//    [aCoder encodeObject:self.mockCaseName forKey:@"mockCaseName"];
-//}
-//
-//- (nullable instancetype)initWithCoder:(NSCoder *)aDecoder {
-//    self = [super init];
-//    if (self) {
-//        _cgiMockScripts = [aDecoder decodeObjectForKey:@"cgiMockScripts"];
-//        _mockCaseName = [aDecoder decodeObjectForKey:@"mockCaseName"];
-//    }
-//    return self;
-//}
-
 - (instancetype)initWithDictionary:(NSDictionary *)dict {
     self = [super init];
     if (self) {
         _mockcaseId = [dict objectForKey:@"mockcaseId"];
         _mockcaseName = [dict objectForKey:@"mockcaseName"];
         _cgiMockScripts = [dict objectForKey:@"cgiMockScripts"];
+        _cgiMockScriptsSelectDict = [dict objectForKey:@"cgiMockScriptsSelectDict"];
     }
     return self;
 }
@@ -40,6 +27,7 @@
         _mockcaseId = [NSUUID UUID].UUIDString;
         _mockcaseName = mockcaseName;
         _cgiMockScripts = [[NSMutableArray alloc] init];
+        _cgiMockScriptsSelectDict = [[NSMutableDictionary alloc] init];
     }
     return self;
 }
@@ -49,6 +37,7 @@
     [mDict setObject:_mockcaseId forKey:@"mockcaseId"];
     [mDict setObject:_mockcaseName forKey:@"mockcaseName"];
     [mDict setObject:_cgiMockScripts forKey:@"cgiMockScripts"];
+    [mDict setObject:_cgiMockScriptsSelectDict forKey:@"cgiMockScriptsSelectDict"];
     return [mDict copy];
 }
 
