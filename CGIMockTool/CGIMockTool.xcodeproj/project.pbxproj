@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4C2EC74B20FC4BAA00827E7C /* ZipArchive.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4C2EC74820FC4BAA00827E7C /* ZipArchive.mm */; };
+		4C2EC74C20FC4BAA00827E7C /* MZipUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2EC74A20FC4BAA00827E7C /* MZipUtil.m */; };
+		4C4770AA20FC50D60056078A /* unzip.c in Sources */ = {isa = PBXBuildFile; fileRef = 4C4770A220FC50D60056078A /* unzip.c */; };
+		4C4770AB20FC50D60056078A /* zip.c in Sources */ = {isa = PBXBuildFile; fileRef = 4C4770A320FC50D60056078A /* zip.c */; };
+		4C4770AC20FC50D60056078A /* ioapi.c in Sources */ = {isa = PBXBuildFile; fileRef = 4C4770A420FC50D60056078A /* ioapi.c */; };
+		4C4770AD20FC50D60056078A /* mztools.c in Sources */ = {isa = PBXBuildFile; fileRef = 4C4770A520FC50D60056078A /* mztools.c */; };
 		4C65B12620CBED4D006D216D /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C65B12520CBED4D006D216D /* AppDelegate.m */; };
 		4C65B12920CBED4D006D216D /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C65B12820CBED4D006D216D /* RootViewController.m */; };
 		4C65B12B20CBED4F006D216D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4C65B12A20CBED4F006D216D /* Assets.xcassets */; };
@@ -104,6 +110,19 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4C2EC74720FC4BA900827E7C /* MZipUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MZipUtil.h; sourceTree = "<group>"; };
+		4C2EC74820FC4BAA00827E7C /* ZipArchive.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ZipArchive.mm; sourceTree = "<group>"; };
+		4C2EC74920FC4BAA00827E7C /* ZipArchive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZipArchive.h; sourceTree = "<group>"; };
+		4C2EC74A20FC4BAA00827E7C /* MZipUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MZipUtil.m; sourceTree = "<group>"; };
+		4C2EC74D20FC4BF300827E7C /* jsoneditor */ = {isa = PBXFileReference; lastKnownFileType = folder; name = jsoneditor; path = ../../../Wechat_Git/wechat/tools/CgiMockTool/jsoneditor; sourceTree = "<group>"; };
+		4C4770A220FC50D60056078A /* unzip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = unzip.c; sourceTree = "<group>"; };
+		4C4770A320FC50D60056078A /* zip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip.c; sourceTree = "<group>"; };
+		4C4770A420FC50D60056078A /* ioapi.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ioapi.c; sourceTree = "<group>"; };
+		4C4770A520FC50D60056078A /* mztools.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mztools.c; sourceTree = "<group>"; };
+		4C4770A620FC50D60056078A /* zip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zip.h; sourceTree = "<group>"; };
+		4C4770A720FC50D60056078A /* unzip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = unzip.h; sourceTree = "<group>"; };
+		4C4770A820FC50D60056078A /* mztools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mztools.h; sourceTree = "<group>"; };
+		4C4770A920FC50D60056078A /* ioapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ioapi.h; sourceTree = "<group>"; };
 		4C65B12120CBED4D006D216D /* CGIMockTool.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CGIMockTool.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C65B12420CBED4D006D216D /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		4C65B12520CBED4D006D216D /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -290,7 +309,6 @@
 		4CF3FC0420E3B20000CE7E96 /* NewMockCaseWindowController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NewMockCaseWindowController.m; sourceTree = "<group>"; };
 		4CF3FC0620E3B23200CE7E96 /* NewMockCaseViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NewMockCaseViewController.h; sourceTree = "<group>"; };
 		4CF3FC0720E3B23200CE7E96 /* NewMockCaseViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NewMockCaseViewController.m; sourceTree = "<group>"; };
-		743EAE7E20EB241B007351E7 /* jsoneditor */ = {isa = PBXFileReference; lastKnownFileType = folder; name = jsoneditor; path = ../../../Wechat_Git/wechat_trunk/wechat/tools/CgiMockTool/jsoneditor; sourceTree = "<group>"; };
 		743EAE8020EB50DC007351E7 /* MMSearchTextField.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMSearchTextField.h; sourceTree = "<group>"; };
 		743EAE8120EB50DC007351E7 /* MMSearchTextField.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMSearchTextField.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -307,10 +325,37 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4C2EC74620FC4B7200827E7C /* 3rd */ = {
+			isa = PBXGroup;
+			children = (
+				4C4770A120FC50D60056078A /* minizip */,
+				4C2EC74720FC4BA900827E7C /* MZipUtil.h */,
+				4C2EC74A20FC4BAA00827E7C /* MZipUtil.m */,
+				4C2EC74920FC4BAA00827E7C /* ZipArchive.h */,
+				4C2EC74820FC4BAA00827E7C /* ZipArchive.mm */,
+			);
+			path = 3rd;
+			sourceTree = "<group>";
+		};
+		4C4770A120FC50D60056078A /* minizip */ = {
+			isa = PBXGroup;
+			children = (
+				4C4770A220FC50D60056078A /* unzip.c */,
+				4C4770A320FC50D60056078A /* zip.c */,
+				4C4770A420FC50D60056078A /* ioapi.c */,
+				4C4770A520FC50D60056078A /* mztools.c */,
+				4C4770A620FC50D60056078A /* zip.h */,
+				4C4770A720FC50D60056078A /* unzip.h */,
+				4C4770A820FC50D60056078A /* mztools.h */,
+				4C4770A920FC50D60056078A /* ioapi.h */,
+			);
+			path = minizip;
+			sourceTree = "<group>";
+		};
 		4C65B11820CBED4C006D216D = {
 			isa = PBXGroup;
 			children = (
-				743EAE7E20EB241B007351E7 /* jsoneditor */,
+				4C2EC74D20FC4BF300827E7C /* jsoneditor */,
 				4C8B303220CF6E1D00B3201F /* google */,
 				4C65B12320CBED4D006D216D /* CGIMockTool */,
 				4C65B12220CBED4D006D216D /* Products */,
@@ -329,6 +374,7 @@
 		4C65B12320CBED4D006D216D /* CGIMockTool */ = {
 			isa = PBXGroup;
 			children = (
+				4C2EC74620FC4B7200827E7C /* 3rd */,
 				4C65B12F20CBED4F006D216D /* Info.plist */,
 				4CF3FBF720DCFFA800CE7E96 /* Others */,
 				4CF3FBF620DCFF9300CE7E96 /* View */,
@@ -670,6 +716,11 @@
 				TargetAttributes = {
 					4C65B12020CBED4D006D216D = {
 						CreatedOnToolsVersion = 9.3;
+						SystemCapabilities = {
+							com.apple.Sandbox = {
+								enabled = 0;
+							};
+						};
 					};
 				};
 			};
@@ -752,11 +803,14 @@
 				4C8B30D520CF6E1D00B3201F /* objectivec-descriptor.pb.cc in Sources */,
 				743EAE8220EB50DC007351E7 /* MMSearchTextField.m in Sources */,
 				4C8B310B20CF6E1D00B3201F /* objectivec_generator.cc in Sources */,
+				4C4770AB20FC50D60056078A /* zip.c in Sources */,
 				4C91D89E20D3A3CB0025A5B5 /* JSONEditorViewController.m in Sources */,
 				4C8B310820CF6E1D00B3201F /* objectivec_field.cc in Sources */,
+				4C4770AA20FC50D60056078A /* unzip.c in Sources */,
 				4C65B16120CE1B94006D216D /* NSView+Extend.m in Sources */,
 				4C65B13D20CD2CFB006D216D /* SetRootDirViewController.m in Sources */,
 				4C8B30FF20CF6E1D00B3201F /* cpp_string_field.cc in Sources */,
+				4C4770AC20FC50D60056078A /* ioapi.c in Sources */,
 				4C8B30D020CF6E1D00B3201F /* substitute.cc in Sources */,
 				4C8B30E420CF6E1D00B3201F /* message.cc in Sources */,
 				4C8B310720CF6E1D00B3201F /* objectivec_file.cc in Sources */,
@@ -770,6 +824,7 @@
 				4C8B30D220CF6E1D00B3201F /* descriptor_database.cc in Sources */,
 				4C8B30D320CF6E1D00B3201F /* reflection_ops.cc in Sources */,
 				4C8B310120CF6E1D00B3201F /* cpp_field.cc in Sources */,
+				4C2EC74C20FC4BAA00827E7C /* MZipUtil.m in Sources */,
 				4CF3FBFF20E3892900CE7E96 /* MockCaseMangeWindowController.m in Sources */,
 				4C8B30DD20CF6E1D00B3201F /* zero_copy_stream.cc in Sources */,
 				4C8B30EF20CF6E1D00B3201F /* java_primitive_field.cc in Sources */,
@@ -787,11 +842,13 @@
 				4C8B30F620CF6E1D00B3201F /* java_field.cc in Sources */,
 				4C91DB0920D7BCB40025A5B5 /* MMWKWebView.m in Sources */,
 				4C8B30F520CF6E1D00B3201F /* java_helpers.cc in Sources */,
+				4C2EC74B20FC4BAA00827E7C /* ZipArchive.mm in Sources */,
 				4C8B30FD20CF6E1D00B3201F /* cpp_message_field.cc in Sources */,
 				4C8B30EE20CF6E1D00B3201F /* java_message.cc in Sources */,
 				4CF3FBFB20E1E50100CE7E96 /* MMCgiMockCase.m in Sources */,
 				4C8B30E220CF6E1D00B3201F /* generated_message_util.cc in Sources */,
 				4C8B310E20CF6E1D00B3201F /* importer.cc in Sources */,
+				4C4770AD20FC50D60056078A /* mztools.c in Sources */,
 				4C8B311120CF6E1D00B3201F /* extension_set.cc in Sources */,
 				4C8B30E720CF6E1D00B3201F /* wire_format.cc in Sources */,
 				4C8B30ED20CF6E1D00B3201F /* java_file.cc in Sources */,
@@ -931,7 +988,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CONFIGURATION_BUILD_DIR = /Users/lianglitu/Developer/Wechat_Git/wechat_trunk/wechat/tools/CgiMockTool;
+				CONFIGURATION_BUILD_DIR = /Users/littleliang/Developer/Wechat_Git/wechat/tools/CgiMockTool;
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/**";
 				INFOPLIST_FILE = CGIMockTool/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -950,7 +1007,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CONFIGURATION_BUILD_DIR = /Users/lianglitu/Developer/Wechat_Git/wechat_trunk/wechat/tools/CgiMockTool;
+				CONFIGURATION_BUILD_DIR = /Users/littleliang/Developer/Wechat_Git/wechat/tools/CgiMockTool;
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/**";
 				INFOPLIST_FILE = CGIMockTool/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (

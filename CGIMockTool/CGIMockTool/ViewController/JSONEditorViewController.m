@@ -49,8 +49,10 @@
 - (void)setCgiMockScript:(MMCgiMockScript *)mockScript {
     self.mockScript = mockScript;
     if (self.mockScript.isUpdateFromSvr) {
+        self.isUpdateFromSvr = YES;
         self.isUpdateFromSvrCheckBox.state = NSControlStateValueOn;
     } else {
+        self.isUpdateFromSvr = NO;
         self.isUpdateFromSvrCheckBox.state = NSControlStateValueOff;
     }
 }

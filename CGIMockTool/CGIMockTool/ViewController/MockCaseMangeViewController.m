@@ -15,6 +15,8 @@
 #import "JSONEditorViewController.h"
 #import "MMCgiMockScript.h"
 #import "MMSearchTextField.h"
+#import "MZipUtil.h"
+#import "ZipArchive.h"
 
 @interface MockCaseMangeViewController ()<NSTabViewDelegate, NSTableViewDataSource, NewMockCaseViewControllerDelegate>
 @property (weak) IBOutlet NSTableView *mockCaseTableView;
@@ -401,6 +403,53 @@
     [self.mockScriptsTableView reloadData];
 }
 
+
+- (IBAction)onPackMockCase:(id)sender {
+    if (self.selectedMockCase == nil) {
+        [MMMockToolUtil showAlert:self.view.window title:@"" message:@"请选择一个用例"];
+        return;
+    }
+    
+    NSArray *selectedMockCaseScripts = [self.selectedMockCase.cgiMockScripts copy];
+    NSDictionary *selectDict = [self.selectedMockCase.cgiMockScriptsSelectDict copy];
+    NSString *outputCgiMockStageFile = [NSString stringWithFormat:@"//Mock case name : %@ ID: %@\n", self.selectedMockCase.mockcaseName, self.selectedMockCase.mockcaseId];
+    for (NSString *mockScript in selectedMockCaseScripts) {
+        if ([[selectDict objectForKey:mockScript] boolValue] == YES) {
+            NSString *tempStr = [NSString stringWithFormat:@"require(\"%@\")\n", [mockScript lastPathComponent]];
+            outputCgiMockStageFile = [outputCgiMockStageFile stringByAppendingString:tempStr];
+        }
+    }
+    
+    NSSavePanel *panel = [NSSavePanel savePanel];
+    [panel setNameFieldStringValue:[NSString stringWithFormat:@"%@.mock.zip",self.selectedMockCase.mockcaseName]];
+    NSString *rootDir = [MMMockToolUtil projectRootDir];
+    [panel setDirectoryURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/MMTest/CgiMock/CgiMockTestCase/", rootDir]]];
+    if ([panel runModal] == NSModalResponseOK) {
+        
+        NSError *error = nil;
+        NSString *panelPath = [[[panel URL] absoluteString] substringWithRange:NSMakeRange(5, [[panel URL] absoluteString].length - 5)];
+        NSString *tempDirectPath = [[panelPath stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"tempCgiMockCaseDict"];
+    
+        [[NSFileManager defaultManager] createDirectoryAtPath:tempDirectPath withIntermediateDirectories:YES attributes:nil error:&error];
+        [outputCgiMockStageFile writeToFile:[tempDirectPath stringByAppendingPathComponent:@"cgimockstage.js"] atomically:YES encoding:NSUTF8StringEncoding error:nil];
+        for (NSString *relativePath in selectedMockCaseScripts) {
+            NSString *mockScriptPath = [[NSString stringWithFormat:@"%@/MMTest/CgiMock/CgiMockTestCase/", rootDir] stringByAppendingPathComponent:relativePath];
+            NSString *lastPathComponent = [mockScriptPath lastPathComponent];
+            [[NSFileManager defaultManager] copyItemAtPath:mockScriptPath toPath:[tempDirectPath stringByAppendingPathComponent:lastPathComponent] error:nil];
+        }
+        ZipArchive *zip = [[ZipArchive alloc] init];
+        NSString *zipPath = panelPath;
+        
+        [zip CreateZipFile2:zipPath];
+        [zip addFileToZip:tempDirectPath newname:@"CgiMockCase"];
+        [zip CloseZipFile2];
+        
+        [[NSFileManager defaultManager] removeItemAtPath:tempDirectPath error:&error];
+    } else {
+        NSLog(@"User click cancel.");
+    }
+    
+}
 
 
 @end

@@ -297,12 +297,14 @@ static NSMutableDictionary * kMessageNameProtoFileMap = nil;
     
     google::protobuf::compiler::objectivec::ObjectiveCGenerator objc_generator;
     cli.RegisterGenerator("--mockcase_out", &objc_generator, "Generate Mock Case Script File");
+    
+    int result = cli.Run(argc, argv);
+    
     for (int i = 0; i < argc; i++) {
         delete[] argv[i];
     }
     delete[] argv;
     
-    int result = cli.Run(argc, argv);
     if (result != 0) {
         NSLog(@"error !!!!");
         return nil;
@@ -321,6 +323,8 @@ static NSMutableDictionary * kMessageNameProtoFileMap = nil;
             return content;
         }
     }
+    
+    
     
     return nil;
 }
