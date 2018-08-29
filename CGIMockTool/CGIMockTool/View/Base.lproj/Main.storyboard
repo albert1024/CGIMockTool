@@ -683,7 +683,7 @@
                                 <constraints>
                                     <constraint firstAttribute="width" constant="72" id="IxK-FN-4Bf"/>
                                 </constraints>
-                                <buttonCell key="cell" type="push" title="Simulator" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Hjt-4h-4Pf">
+                                <buttonCell key="cell" type="push" title="Apply" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Hjt-4h-4Pf">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>

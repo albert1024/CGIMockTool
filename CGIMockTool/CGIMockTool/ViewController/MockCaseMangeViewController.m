@@ -179,7 +179,7 @@
         MMCgiMockCase *mockcase = [self.mockcaseDataArr objectAtIndex:row];
         NSString *str = [NSString stringWithFormat:@"%@", mockcase.mockcaseName];
         if ([mockcase.mockcaseId isEqualToString:self.nowMockCaseId]) {
-            return [str stringByAppendingString:@"  ✔"];
+            return [str stringByAppendingString:@"  ☑️"];
         }
         return  str;
     } else {
@@ -187,7 +187,7 @@
         
         BOOL value = [[self.selectedMockCase.cgiMockScriptsSelectDict objectForKey:scriptPath] boolValue];
         if (value == YES) {
-            return [scriptPath stringByAppendingString:@"  ✔"];
+            return [scriptPath stringByAppendingString:@"  ☑️"];
         }
         return scriptPath;
     }
@@ -332,7 +332,7 @@
     }
     self.nowMockCaseId = self.selectedMockCase.mockcaseId;
     [self.mockCaseTableView reloadData];
-    [MMMockToolUtil showAlert:self.view.window title:@"" message:@"更改用例成功"];
+//    [MMMockToolUtil showAlert:self.view.window title:@"" message:@"更改用例成功"];
 }
 
 - (IBAction)onRemoveBtnClick:(id)sender {
@@ -348,7 +348,7 @@
     [self.mockScriptsTableView reloadData];
 }
 
-- (NSString *)getNowMockCaseId {
+- (NSString *)  getNowMockCaseId {
     NSString *filePath = [[MMMockToolUtil projectRootDir] stringByAppendingPathComponent:@"MMTest/CgiMock/CgiMockTestCase/cgimockstage.js"];
     NSString *content = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
     NSArray *lines = [content componentsSeparatedByString:@"\n"];
@@ -409,6 +409,8 @@
         [MMMockToolUtil showAlert:self.view.window title:@"" message:@"请选择一个用例"];
         return;
     }
+    
+    [self onApplyBtnClick:nil];
     
     NSArray *selectedMockCaseScripts = [self.selectedMockCase.cgiMockScripts copy];
     NSDictionary *selectDict = [self.selectedMockCase.cgiMockScriptsSelectDict copy];
