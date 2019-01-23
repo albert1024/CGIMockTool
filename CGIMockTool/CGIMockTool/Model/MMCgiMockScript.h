@@ -17,5 +17,6 @@
 @property(nonatomic, strong) NSString *scriptRemark;
 @property(nonatomic, assign) BOOL isUpdateFromSvr;
 @property(nonatomic, strong) NSString *scriptDirectory;
+@property(nonatomic, assign) CGFloat responseTime;
 
 @end

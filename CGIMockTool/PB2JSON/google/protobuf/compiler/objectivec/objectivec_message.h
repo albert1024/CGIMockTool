@@ -55,7 +55,7 @@ namespace google {
                     void GenerateSource(io::Printer* printer);
                     void GenerateExtensionRegistrationSource(io::Printer* printer);
                     void DetermineDependencies(set<string>* dependencies);
-                    void GenerateMessage(io::Printer *printer);
+                    void GenerateMessage(io::Printer *printer, int level, int maxLevel);
                     
                 private:
                     //bool IsPrimitiveType(FieldDescriptor::Type);

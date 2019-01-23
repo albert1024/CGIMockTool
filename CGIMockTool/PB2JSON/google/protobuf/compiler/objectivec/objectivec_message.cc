@@ -31,6 +31,8 @@
 #include <google/protobuf/wire_format_lite_inl.h>
 #include <google/protobuf/descriptor.pb.h>
 
+#define MAXLEVEL 10
+
 namespace google { namespace protobuf { namespace compiler { namespace objectivec {
     
     using internal::WireFormat;
@@ -338,7 +340,10 @@ namespace google { namespace protobuf { namespace compiler { namespace objective
         
     }
     
-    void MessageGenerator::GenerateMessage(io::Printer *printer) {
+    void MessageGenerator::GenerateMessage(io::Printer *printer, int level, int maxLevel) {
+        if (level >= maxLevel) {
+            return;
+        }
         for (int i = 0; i < descriptor_->field_count(); i++) {
             const FieldDescriptor *pFieldDescriptor = descriptor_->field(i);
             if (pFieldDescriptor->is_repeated()) {
@@ -356,7 +361,9 @@ namespace google { namespace protobuf { namespace compiler { namespace objective
                             printer->Print("Error occurs: repeated->null message type.");
                             return;
                         }
-                        MessageGenerator(pD).GenerateMessage(printer);
+//                        string s = UnderscoresToCamelCase(pFieldDescriptor);
+//                        printf("%s\n",s.c_str());
+                        MessageGenerator(pD).GenerateMessage(printer, level + 1, maxLevel);
                     }
                     printer->Outdent();
                     printer->Outdent();
@@ -408,10 +415,25 @@ namespace google { namespace protobuf { namespace compiler { namespace objective
                         printer->Print("Error occurs: not repeated->null message type.");
                         return;
                     }
+                    string s = pFieldDescriptor->message_type()->name();
+                    if (s == "ControlInfo" || s == "RouteInfo" || s == "CmdInfo") {
+                        printer->Print("\"$variblename$\" : {\n","variblename", UnderscoresToCamelCase(pFieldDescriptor));
+                        printer->Indent();
+                        printer->Indent();
+                        MessageGenerator(pD).GenerateMessage(printer, maxLevel - 1, maxLevel);
+                        printer->Outdent();
+                        printer->Outdent();
+                        if (i == descriptor_->field_count() - 1) {
+                            printer->Print("}\n");
+                        } else {
+                            printer->Print("},\n");
+                        }
+                        continue;
+                    }
                     printer->Print("\"$variblename$\" : {\n","variblename", UnderscoresToCamelCase(pFieldDescriptor));
                     printer->Indent();
                     printer->Indent();
-                    MessageGenerator(pD).GenerateMessage(printer);
+                    MessageGenerator(pD).GenerateMessage(printer, level + 1, maxLevel);
                     printer->Outdent();
                     printer->Outdent();
                     if (i == descriptor_->field_count() - 1) {
@@ -430,7 +452,7 @@ namespace google { namespace protobuf { namespace compiler { namespace objective
         printer->Print("{\n");
         printer->Indent();
         printer->Indent();
-        GenerateMessage(printer);
+        GenerateMessage(printer, 0, 10);
         printer->Outdent();
         printer->Outdent();
         printer->Print("}\n\n");
@@ -438,7 +460,7 @@ namespace google { namespace protobuf { namespace compiler { namespace objective
         vars["cgiNumber"] = cgiNumber_;
         vars["isUpdateFromSvr"] = isUpdateFromSvr_;
         //string s = string(printer->buffer_);
-        printf("%s", printer->s_.c_str());
+//        printf("%s", printer->s_.c_str());
         //printer->Print(vars, "mockRequest($cgiNumber$).isUpdateFromSvr($isUpdateFromSvr$).withResponse(response)");
         
     }

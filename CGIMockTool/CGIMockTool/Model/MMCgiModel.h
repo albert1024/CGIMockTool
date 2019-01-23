@@ -14,5 +14,6 @@
 @property(nonatomic, assign) UInt32 cgiNumber;
 @property(nonatomic, strong) NSString *messageName;
 @property(nonatomic, strong) NSString *protoPath;
+@property(nonatomic, assign) BOOL isCrossPlatform;
 
 @end

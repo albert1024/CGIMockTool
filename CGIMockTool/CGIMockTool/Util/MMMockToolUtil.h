@@ -29,6 +29,8 @@ static NSString * const kNotificationSaveRootDir = @"kNotificationSaveRootDir";
 
 + (NSArray *)parseProtoFilesToCgiModel:(NSArray *)protoFiles;
 
++ (NSArray *)parseCrossplatformProtoFilesToCgiModel;
+
 + (NSString *)generateMockCaseTemplateWithCgiModel:(MMCgiModel *)cgiModel;
 
 + (BOOL)saveMockScript:(MMCgiMockScript *)mockScript;

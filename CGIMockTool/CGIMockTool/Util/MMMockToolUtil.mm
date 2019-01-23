@@ -31,8 +31,22 @@ static NSString * const kRootDirKey = @"rootdirkey1";
 static NSUserDefaults *userDefaults = nil;
 static dispatch_once_t onceToken;
 static NSMutableArray *kProtofilePathsArray = nil;
+
+
 static NSMutableDictionary * kCgiFuncNameMessageNameMap = nil;
+static NSMutableDictionary * kCgiCrossplatformFuncNameMessageNameMap = nil;
+
+
 static NSMutableDictionary * kMessageNameProtoFileMap = nil;
+
+static NSMutableArray * kCrossplatformCgiModelArray = nil;
+static NSMutableArray *kCrossPlatformProtofilePathsArray = nil;
+
+
+static NSMutableArray *kCrossplatformCgiPathsArray = nil;
+static NSMutableArray  *kCrossplatformContentsArray = nil;
+static NSMutableDictionary * kCrossplatformCgiPathContentDict = nil;
+static NSMutableDictionary * kCrossplatformMessageNameProtoFileMap = nil;
 
 
 @implementation MMMockToolUtil
@@ -74,6 +88,12 @@ static NSMutableDictionary * kMessageNameProtoFileMap = nil;
     NSString *mmproto = [prefixDir stringByAppendingString:MMROTODEF];
     
     return @[mmbizproto, mmochwappdef, mmuxproto, mmgameproto, mmadproto, mmproto, mmpayproto];
+}
+
++ (NSArray *)parseCrossplatformProtoFilesToCgiModel {
+    [self loadCrossPlatformProtoFileArray];
+    [self loadCrossplatformCgiModel];
+    return kCrossplatformCgiModelArray;
 }
 
 + (NSArray *)parseProtoFilesToCgiModel:(NSArray *)protoFiles {
@@ -135,6 +155,7 @@ static NSMutableDictionary * kMessageNameProtoFileMap = nil;
     return NO;
 }
 
+
 + (void)loadMessageNameProtoFileMap {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -179,6 +200,113 @@ static NSMutableDictionary * kMessageNameProtoFileMap = nil;
     }
 }
 
++ (void)loadCrossplatformCgiModel {
+    NSString *nsCgiEventConfigPath = [self crossplatformCgiDefConfigPath];
+    kCrossplatformCgiModelArray = [[NSMutableArray alloc] init];
+    NSError *error = nil;
+    NSString *fileContent = [NSString stringWithContentsOfFile:nsCgiEventConfigPath encoding:NSUTF8StringEncoding error:&error];
+    NSArray *lines = [fileContent componentsSeparatedByString:@"\n"];
+    NSEnumerator *enumator = [lines objectEnumerator];
+    NSString *tmp = nil;
+    while (tmp = [enumator nextObject]) {
+        if ([tmp containsString:@"="]) {
+             NSString *tstString = [tmp stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+            //NSLog(@"%@",tstString);
+            NSArray *comps = [tstString componentsSeparatedByString:@"="];
+            NSString *cgiName = [[comps objectAtIndex:0] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+            NSString *cgiNumber = [[[[comps objectAtIndex:1] componentsSeparatedByString:@","] objectAtIndex:0] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+            if (cgiName.length > 0 && cgiNumber.length > 0) {
+                MMCgiModel *cgiModel = [[MMCgiModel alloc] init];
+                cgiModel.cgiNumber = (UInt32)[cgiNumber integerValue];
+                cgiModel.cgiFuncName = cgiName;
+                [kCrossplatformCgiModelArray addObject:cgiModel];
+            }
+        }
+    }
+    
+    //messageName
+    for (MMCgiModel *cgiModel in kCrossplatformCgiModelArray) {
+        NSString *cgiFuncName = [@"CgiDef::" stringByAppendingString:cgiModel.cgiFuncName];
+        for (NSString *cgiPath in kCrossplatformCgiPathContentDict.allKeys) {
+            NSString *content = [kCrossplatformCgiPathContentDict objectForKey:cgiPath];
+            if ([content containsString:cgiFuncName]) {
+                NSString *cgiHppPath = [[cgiPath stringByDeletingPathExtension] stringByAppendingString:@".hpp"];
+                NSString *hppContent = [kCrossplatformCgiPathContentDict objectForKey:cgiHppPath];
+                NSRange range = [hppContent rangeOfString:@"KindaBaseCgi<.+>" options:NSRegularExpressionSearch];
+                if (range.location != NSNotFound) {
+                    NSString *subStr = [hppContent substringWithRange:range];
+                    NSRange targetRange = [[hppContent substringWithRange:range] rangeOfString:@"<.+>" options:NSRegularExpressionSearch];
+                    subStr = [subStr substringWithRange:targetRange];
+                    NSArray *comps = [subStr componentsSeparatedByString:@","];
+                    NSString *responseName = [[comps objectAtIndex:1] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+                    responseName = [responseName substringWithRange:NSMakeRange(0, responseName.length - 1)];
+                    if ([responseName containsString:@"::"]) {
+                        responseName = [[responseName componentsSeparatedByString:@"::"] objectAtIndex:1];
+                    }
+                    cgiModel.messageName = responseName;
+                }
+                break;
+            }
+        }
+    }
+    
+    //protopath
+    kCrossplatformMessageNameProtoFileMap = [[NSMutableDictionary alloc] init];
+    for (NSString *nsProtofileName in kCrossPlatformProtofilePathsArray) {
+        NSError *error = nil;
+        NSString *fileContent = [NSString stringWithContentsOfFile:nsProtofileName encoding:NSUTF8StringEncoding error:&error];
+        NSArray *lines = [fileContent componentsSeparatedByString:@"\n"];
+        NSEnumerator *enumator = [lines objectEnumerator];
+        NSString *tmp = nil;
+        while (tmp = [enumator nextObject]) {
+            if ([tmp containsString:@"message"]) {
+                NSString *trimmingString = [tmp stringByTrimmingCharactersInSet:
+                                            [NSCharacterSet whitespaceAndNewlineCharacterSet]];
+                if ([[trimmingString substringWithRange:NSMakeRange(0, 7)] isEqualToString:@"message"]) {
+                    NSArray *messageComponents = [trimmingString componentsSeparatedByString:@" "];
+                    NSMutableArray *messageComponentsMutableArray = [messageComponents mutableCopy];
+                    [messageComponentsMutableArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                        if ([(NSString *)obj length] == 0) {
+                            [messageComponentsMutableArray removeObject:obj];
+                        }
+                    }];
+                    NSString *messageName = [messageComponentsMutableArray objectAtIndex:1];
+                    if ([messageName containsString:@"{"]) {
+                        NSRange range = [messageName rangeOfString:@"{"];
+                        messageName = [messageName substringToIndex:range.location];
+                    } else if ([messageName containsString:@"/"]) {
+                        NSRange range = [messageName rangeOfString:@"/"];
+                        messageName = [messageName substringToIndex:range.location];
+                    }
+                    messageName = [messageName stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+                    [kCrossplatformMessageNameProtoFileMap setObject:nsProtofileName forKey:messageName];
+                }
+            }
+        }
+    }
+    for (MMCgiModel *cgiModel in kCrossplatformCgiModelArray) {
+        cgiModel.protoPath = [kCrossplatformMessageNameProtoFileMap objectForKey:cgiModel.messageName];
+        cgiModel.isCrossPlatform = YES;
+    }
+}
+
+//+ (BOOL)matchString:(NSString *)str withPattern:(NSString *)pattern resultBlock:(resultBlock)block {
+//     NSError *error = nil;
+//     NSRegularExpression *regular = [NSRegularExpression regularExpressionWithPattern: pattern options: NSRegularExpressionCaseInsensitive error: &error];
+//     if (!error) {
+//             NSTextCheckingResult *result = [regular firstMatchInString:str options:0 range:NSMakeRange(0, str.length)];
+//             if (result) {
+//                     NSLog(@"匹配成功");
+//                     block([str substringWithRange:result.range]);
+//                     return YES;
+//                 } else {
+//                         NSLog(@"匹配失败");
+//                         return NO;
+//                     }
+//         }
+//     NSLog(@"匹配失败,Error: %@",error);
+//     return NO;
+//}
 
 
 + (void)loadCgiFuncNameMessageNameMap {
@@ -243,6 +371,35 @@ static NSMutableDictionary * kMessageNameProtoFileMap = nil;
     return;
 }
 
++ (void)loadCrossPlatformProtoFileArray {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        kCrossPlatformProtofilePathsArray = [[NSMutableArray alloc] init];
+        kCrossplatformCgiPathContentDict = [[NSMutableDictionary alloc] init];
+    });
+    [kCrossPlatformProtofilePathsArray removeAllObjects];
+    NSString *protoDir = [[self projectRootDir] stringByAppendingPathComponent:@"/kinda/script/proto_src_temp"];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:protoDir]) {
+        NSMutableArray *filesArray = [self getAllFiles:protoDir];
+        for (NSString *nsFilePath in filesArray) {
+            if ([[nsFilePath pathExtension] isEqualToString:@"proto"]) {
+                [kCrossPlatformProtofilePathsArray addObject:nsFilePath];
+            }
+        }
+    }
+    
+    NSString *cgiDir = [[self projectRootDir] stringByAppendingPathComponent:@"/kinda/CrossPlatform/Sources/Code/platform"];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:cgiDir]) {
+        NSMutableArray *filesArray = [self getAllFiles:cgiDir];
+        for (NSString *nsFilePath in filesArray) {
+            if ([nsFilePath containsString:@"Cgi.hpp"] || [nsFilePath containsString:@"Cgi.cpp"]) {
+                NSString *fileContent = [NSString stringWithContentsOfFile:nsFilePath encoding:NSUTF8StringEncoding error:nil];
+                [kCrossplatformCgiPathContentDict setObject:fileContent forKey:nsFilePath];
+            }
+        }
+    }
+}
+
 + (NSArray *)getCurrentFiles:(NSString *)root {
     NSFileManager* fm;
     fm = [NSFileManager defaultManager];
@@ -265,14 +422,26 @@ static NSMutableDictionary * kMessageNameProtoFileMap = nil;
     return dirArray;
 }
 
++ (NSString *)crossplatformCgiDefConfigPath {
+    return [[self projectRootDir] stringByAppendingPathComponent:@"/kinda/CrossPlatform/Sources/Code/platform/module/NetworkCgiDef.hpp"];
+}
+
 + (NSString *)cgiEventConfigPath {
     return [[self projectRootDir] stringByAppendingPathComponent:@"/MMFoundation/EventService/CgiEventConfig.mm"];
 }
 
 + (NSString *)generateMockCaseTemplateWithCgiModel:(MMCgiModel *)cgiModel {
     NSMutableSet *pathSet = [NSMutableSet set];
-    for (NSString *nsPath in kProtofilePathsArray) {
-        [pathSet addObject:[nsPath stringByDeletingLastPathComponent]];
+    if (cgiModel.isCrossPlatform) {
+        for (NSString *nsPath in kCrossPlatformProtofilePathsArray) {
+            [pathSet addObject:[nsPath stringByDeletingLastPathComponent]];
+        }
+//        [pathSet addObject:[[self projectRootDir] stringByAppendingPathComponent:@"/kinda/script/proto_src_temp"]];
+        [pathSet addObject:[[self projectRootDir] stringByAppendingPathComponent:@"/kinda/script/../CrossPlatform/third_lib/protobuf-2.5.0/src"]];
+    } else {
+        for (NSString *nsPath in kProtofilePathsArray) {
+            [pathSet addObject:[nsPath stringByDeletingLastPathComponent]];
+        }
     }
     NSString *cmdStr = @"./PB2JSON ";
     for (NSString *path in pathSet) {
@@ -283,7 +452,7 @@ static NSMutableDictionary * kMessageNameProtoFileMap = nil;
     cmdStr = [cmdStr stringByAppendingString:@"--isUpdateFromSvr=YES "];
     cmdStr = [cmdStr stringByAppendingString:[NSString stringWithFormat:@"--mockcase_out=%@ ", [[self projectRootDir] stringByAppendingPathComponent:@"tools/CgiMockTool/"]]];
     cmdStr = [cmdStr stringByAppendingString:[NSString stringWithFormat:@"%@", cgiModel.protoPath]];
-    
+    NSLog(@"%@", cmdStr);
     NSArray *cmdArray = [cmdStr componentsSeparatedByString:@" "];
     int argc = (int)cmdArray.count;
     char **argv = new char *[argc];

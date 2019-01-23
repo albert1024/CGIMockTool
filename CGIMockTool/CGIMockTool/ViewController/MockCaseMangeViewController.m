@@ -35,6 +35,8 @@
 
 @property(nonatomic, strong) NSString *nowMockCaseId;
 
+
+
 @end
 
 @implementation MockCaseMangeViewController
@@ -120,7 +122,7 @@
     NSString *nsMockScripts = @"{\n";
     tmp = [enumator nextObject];
     while (tmp = [enumator nextObject]) {
-        if ([tmp containsString:@"mockRequest("]) {
+        if ([tmp containsString:@"mockRequest("] || [tmp containsString:@"mockCrossPlatformRequest("]) {
             //NSLog(@"%@", tmp);
             tmp = [tmp stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
             NSArray *components = [tmp componentsSeparatedByString:@"."];
@@ -140,6 +142,7 @@
             BOOL bIsUpdateFromSvr = [isUpdateFromSvrStr isEqualToString:@"YES"] ? YES : NO;
             UInt32 uCgiNumber = (UInt32)[cgiNumberStr integerValue];
             
+            
             MMCgiMockScript *mockScript = [[MMCgiMockScript alloc] init];
             MMCgiModel *model = [[MMCgiModel alloc] init];
             model.cgiNumber = uCgiNumber;
@@ -147,6 +150,17 @@
             mockScript.isUpdateFromSvr = bIsUpdateFromSvr;
             mockScript.jsonScript = nsMockScripts;
             mockScript.scriptName = [self.selectedMockScriptPath lastPathComponent];
+            
+            if ([tmp containsString:@"responseTime"]) {
+                NSRange range = [tmp rangeOfString:@"responseTime\([^)]+\)" options:NSRegularExpressionSearch];
+                if (range.location != NSNotFound) {
+                    NSString *reponseTime = [tmp substringWithRange:range];
+                    range1 = [reponseTime rangeOfString:@"("];
+                    range2 = [reponseTime rangeOfString:@")"];
+                    NSString *responseTimeStr = [reponseTime substringWithRange:NSMakeRange(range1.location + 1, range2.location - range1.location - 1)];
+                    mockScript.responseTime = [responseTimeStr doubleValue];
+                }
+            }
             
             mockScript.scriptDirectory = [self.selectedMockScriptPath stringByDeletingLastPathComponent];
             

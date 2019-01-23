@@ -237,8 +237,8 @@
                                 </wkWebViewConfiguration>
                             </wkWebView>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="aJZ-iq-uRe">
-                                <rect key="frame" x="18" y="18" width="128" height="18"/>
-                                <buttonCell key="cell" type="check" title="isUpdateFromSvr" bezelStyle="regularSquare" imagePosition="left" inset="2" id="Sfw-My-eCA">
+                                <rect key="frame" x="18" y="18" width="102" height="18"/>
+                                <buttonCell key="cell" type="check" title="合并后台回包" bezelStyle="regularSquare" imagePosition="left" inset="2" id="Sfw-My-eCA">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
@@ -256,10 +256,23 @@
                                     <action selector="onClickOutputBtn:" target="QYD-1J-MYG" id="lK3-ld-o88"/>
                                 </connections>
                             </button>
+                            <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="BzZ-7i-kGn">
+                                <rect key="frame" x="133" y="16" width="96" height="22"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="96" id="WLG-Ea-Hvd"/>
+                                </constraints>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="回包延迟(s)" drawsBackground="YES" id="2Tg-Y5-j6S">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
                         </subviews>
                         <constraints>
                             <constraint firstItem="wJD-ri-TWv" firstAttribute="leading" secondItem="aJZ-iq-uRe" secondAttribute="leading" id="264-gB-0oX"/>
                             <constraint firstItem="aJZ-iq-uRe" firstAttribute="top" secondItem="wJD-ri-TWv" secondAttribute="bottom" constant="12" id="Fzt-hf-eym"/>
+                            <constraint firstItem="BzZ-7i-kGn" firstAttribute="leading" secondItem="aJZ-iq-uRe" secondAttribute="trailing" constant="15" id="Ifx-oj-u7J"/>
+                            <constraint firstItem="BzZ-7i-kGn" firstAttribute="baseline" secondItem="aJZ-iq-uRe" secondAttribute="baseline" id="JiI-UV-x5U"/>
                             <constraint firstAttribute="bottom" secondItem="aJZ-iq-uRe" secondAttribute="bottom" constant="20" symbolic="YES" id="Pzf-yt-zYC"/>
                             <constraint firstItem="wJD-ri-TWv" firstAttribute="leading" secondItem="GLh-f1-fue" secondAttribute="leading" constant="20" symbolic="YES" id="QIi-Be-rr2"/>
                             <constraint firstAttribute="trailing" secondItem="Fi0-Le-SHe" secondAttribute="trailing" constant="286" id="ZQe-lN-fB4"/>
@@ -272,6 +285,7 @@
                         <outlet property="isUpdateFromSvrCheckBox" destination="aJZ-iq-uRe" id="uBE-Fs-Ivf"/>
                         <outlet property="jsonEditorWebview" destination="wJD-ri-TWv" id="Za2-CW-LEF"/>
                         <outlet property="outputButton" destination="Fi0-Le-SHe" id="3G1-vM-kou"/>
+                        <outlet property="responseTimeTextField" destination="BzZ-7i-kGn" id="Viv-r9-Cuk"/>
                     </connections>
                 </viewController>
                 <customObject id="OKH-Nj-qQu" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>

@@ -21,7 +21,7 @@
 @interface RootViewController()<NSTabViewDelegate, NSTableViewDataSource, NSSearchFieldDelegate>
 
 @property (weak) IBOutlet NSTableView *cgiNameTableView;
-@property(nonatomic, strong) NSArray *cgiModelArray;
+@property(nonatomic, strong) NSMutableArray *cgiModelArray;
 @property (weak) IBOutlet MMSearchTextField *searchField;
 @property (weak) IBOutlet NSTextField *errorLabel;
 
@@ -57,12 +57,16 @@
         return;
     }
     
-    self.cgiModelArray = [MMMockToolUtil parseProtoFilesToCgiModel:[MMMockToolUtil protoFiles]];
-    [self.cgiNameTableView reloadData];
+    [self reloadData];
 }
 
 - (void)reloadData {
-    self.cgiModelArray = [MMMockToolUtil parseProtoFilesToCgiModel:[MMMockToolUtil protoFiles]];
+    NSArray *modelArray = [MMMockToolUtil parseProtoFilesToCgiModel:[MMMockToolUtil protoFiles]];
+    NSArray *crossPlatformArray = [MMMockToolUtil parseCrossplatformProtoFilesToCgiModel];
+    self.cgiModelArray = [[NSMutableArray alloc] init];
+    [self.cgiModelArray addObjectsFromArray:modelArray];
+    [self.cgiModelArray addObjectsFromArray:crossPlatformArray];
+    [self.cgiNameTableView reloadData];
 }
 
 - (void)onReceiveSaveRootDirNotification {

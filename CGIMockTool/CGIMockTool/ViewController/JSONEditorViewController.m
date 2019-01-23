@@ -22,6 +22,8 @@
 @property (weak) IBOutlet NSButton *isUpdateFromSvrCheckBox;
 @property (weak) IBOutlet NSButton *outputButton;
 
+@property (weak) IBOutlet NSTextField *responseTimeTextField;
+
 @end
 
 @implementation JSONEditorViewController
@@ -30,6 +32,7 @@
     [super viewDidLoad];
     // Do view setup here.
     self.title = @"JSON Editor";
+    //self.responseTimeTextField.stringValue = @"0.3";
 }
 
 - (void)setControllerType:(JSONEditorViewControllerType)controllerType {
@@ -54,6 +57,10 @@
     } else {
         self.isUpdateFromSvr = NO;
         self.isUpdateFromSvrCheckBox.state = NSControlStateValueOff;
+    }
+    
+    if (self.mockScript.responseTime > 0) {
+        self.responseTimeTextField.stringValue = [NSString stringWithFormat:@"%g", self.mockScript.responseTime];
     }
 }
 
@@ -90,7 +97,11 @@
         NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
         jsonString = [@"var response = " stringByAppendingString:jsonString];
         
-        jsonString = [jsonString stringByAppendingFormat:@"%@", [NSString stringWithFormat:@"\nmockRequest(%u).isUpdateFromSvr(%@).withResponse(response)", self.mockScript.cgiModel.cgiNumber, self.isUpdateFromSvr ? @"YES" : @"NO"]];
+        if (self.mockScript.cgiModel.isCrossPlatform) {
+            jsonString = [jsonString stringByAppendingFormat:@"%@", [NSString stringWithFormat:@"\nmockCrossPlatformRequest(%u).isUpdateFromSvr(%@).responseTime(%@).withResponse(response)", self.mockScript.cgiModel.cgiNumber,self.isUpdateFromSvr ? @"YES" : @"NO",  self.responseTimeTextField.stringValue]];
+        } else {
+            jsonString = [jsonString stringByAppendingFormat:@"%@", [NSString stringWithFormat:@"\nmockRequest(%u).isUpdateFromSvr(%@).responseTime(%@).withResponse(response)", self.mockScript.cgiModel.cgiNumber, self.isUpdateFromSvr ? @"YES" : @"NO", self.responseTimeTextField.stringValue]];
+        }
         
         self.mockScript.jsonScript = jsonString;
         [self saveGenerateMockScript];

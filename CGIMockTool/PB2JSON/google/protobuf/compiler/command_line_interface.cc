@@ -355,12 +355,12 @@ int CommandLineInterface::Run(int argc, const char* const argv[]) {
       //printf("parsedfile_name:%s\n \
              parsefile_count:%d\n \
              parsefile_dependency_count:%d\n ", parsed_file->name().c_str(),parsed_file->message_type_count(), parsed_file->dependency_count());
-      if (strcmp(parsed_file->name().c_str(), "BaseResponse.proto") == 0 ) {
-          const Descriptor *messageType = parsed_file->FindMessageTypeByName("BaseResponse");
-          if (messageType != NULL) {
-              printf("messageTypeName:%s\n", messageType->name().c_str());
-          }
-      }
+//      if (strcmp(parsed_file->name().c_str(), "BaseResponse.proto") == 0 ) {
+//          const Descriptor *messageType = parsed_file->FindMessageTypeByName("BaseResponse");
+//          if (messageType != NULL) {
+//              printf("messageTypeName:%s\n", messageType->name().c_str());
+//          }
+//      }
       
     if (parsed_file == NULL) return 1;
     parsed_files.push_back(parsed_file);
